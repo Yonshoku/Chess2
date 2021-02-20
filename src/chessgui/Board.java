@@ -49,9 +49,6 @@ public class Board extends JPanel implements MouseListener{
 
     // Position initialization
     public void initPosition() {
-        System.out.println("h " + new Bishop(0, 0, true).isWhite());
-        System.out.println("h " + new Bishop(0, 0, false).isWhite());
-
         whitePieces.add(new Bishop(2, 7, true));
         whitePieces.add(new Rook(0, 7, true)); 
 
@@ -103,12 +100,12 @@ public class Board extends JPanel implements MouseListener{
     public void paintPieces(Graphics g) {
         for (Piece piece : whitePieces) {
             g.drawImage(whitePiecesImages.get(piece.getType()), getXCoord(piece.getX()), getYCoord(piece.getY()), null);
-            System.out.println(piece.isWhite());
+            System.out.println(piece.isWhite()); // prints true for both white pieces
         }
 
         for (Piece piece : whitePieces) {
             g.drawImage(blackPiecesImages.get(piece.getType()), getXCoord(piece.getX()), getYCoord(piece.getY()), null);
-            System.out.println(piece.isWhite());
+            System.out.println(piece.isWhite()); // prints true for both black pieces (should false, its black)
         }
     }
 
