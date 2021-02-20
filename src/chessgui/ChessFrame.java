@@ -1,34 +1,40 @@
 package chessgui;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
-import javax.swing.JButton;
 
-public class ChessFrame extends JFrame{
 
-    private Board board;
+public class ChessFrame{
     
     private String title = "Chess";
     private int frameWidth = 520;
     private int frameHeight = 520;
 
-    // Constructor
-    public ChessFrame () {
-        initFrame();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new ChessFrame();
+            }
+        });
     }
 
-    private void initFrame() {
-        // Init a frame
-        setTitle(title);
-        setSize(frameWidth, frameHeight);
-        setResizable(false);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public ChessFrame() {
+        JFrame frame = new JFrame(title);
+        frame.setResizable(false);
+        frame.setLocationByPlatform(true);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        frame.setContentPane(new Board(this));
+        frame.pack();
+        frame.setVisible(true);
     }
 
-    public void addComponent(Component c) {
-        add(new JButton("OK"));
-        pack();
+    public int getWidth() {
+        return frameWidth; 
+    }
+
+    public int getHeight() {
+        return frameHeight;
     }
 
 }
