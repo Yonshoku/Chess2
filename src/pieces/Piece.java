@@ -24,11 +24,10 @@ public class Piece {
     }
 
     public boolean isTakesSameColorPiece(int destX, int destY) {
-        Piece active = board.getPiece(board.getActivePieceX(), board.getActivePieceY());
         Piece toCapture = board.getPiece(destX, destY);
 
-        if (active != null && toCapture != null) {
-            return active.isWhite() == toCapture.isWhite();
+        if (board.getActivePiece() != null && toCapture != null) {
+            return board.getActivePiece().isWhite() == toCapture.isWhite();
         }
 
         return false;

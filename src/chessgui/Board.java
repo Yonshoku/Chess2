@@ -31,7 +31,7 @@ public class Board extends JPanel {
     // Black are at the bottom and white at the top
     boolean isPositionReversed = new Random().nextInt(2) > 0 ? true : false; 
     boolean isWhiteMoves = true;
-    int activePieceX, activePieceY;
+    Piece activePiece = null;
 
     // Constructor
     public Board(ChessFrame frame) {
@@ -203,21 +203,21 @@ public class Board extends JPanel {
         }
     }
 
-    public int getActivePieceX() {
-        return activePieceX;
+    public Piece getActivePiece() {
+        return activePiece;
     }
 
-    public void setActivePieceX(int activePieceX) {
-        this.activePieceX = activePieceX;
-    } 
-
-    public int getActivePieceY() {
-        return activePieceY;
+    public void setActivePiece(Piece activePiece) {
+        this.activePiece = activePiece;
     }
-    
-    public void setActivePieceY(int activePieceY) {
-        this.activePieceY = activePieceY;
-    } 
+
+    public boolean isPositionReversed() {
+        return isPositionReversed;
+    }
+
+    public void changeTurn() {
+        isWhiteMoves = !isWhiteMoves;
+    }
 
     // Image handling methods 
     public BufferedImage loadImage(String path) {

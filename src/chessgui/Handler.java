@@ -7,10 +7,12 @@ import java.awt.event.*;
 // ToDo
 // paintNotation
 // King attacked rule
+// Passant pawns
+// Piece clicked after piece should work
+// Color active field, last move
 public class Handler extends MouseAdapter {
     Board board;
-    Piece activePiece;
-    boolean isMoveStarted = false;
+    Piece p; 
     int destX, destY;
 
     public Handler(Board board) {
@@ -19,42 +21,46 @@ public class Handler extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // Move wasn't started, clicked piece becomes active
-        if (!isMoveStarted) {
-            activePiece = board.getPiece(board.getX(e.getX()), board.getY(e.getY())); 
-            System.out.println(activePiece);
+        // Moves was not started or clicked finish field contains piece of
+        // same color as active piece. Clicked piece becomes new active piece
 
-            if (activePiece != null) {
-                // Mark clicked field as active
-                // Piece on this field going to be moved
-                board.setActivePieceX(activePiece.getX());
-                board.setActivePieceY(activePiece.getY());
+        if (board.getActivePiece() == null) {
+            p = board.getPiece(board.getX(e.getX()), board.getY(e.getY()));
+            board.setActivePiece(p);
 
-                isMoveStarted = true;
-            }
-
-        // Move started
+            System.out.println(board.getActivePiece());
         } else {
             destX = board.getX(e.getX());
             destY = board.getY(e.getY());
 
             // If same piece clicked twice nothing happens, active piece stays same
-            if (activePiece.getX() == destX && activePiece.getY() == destY)
+            if (board.getActivePiece().getX() == destX 
+                    && board.getActivePiece().getY() == destY)
                 return;
 
+            // If clicked piece of same color but active piece already exists
+            // Clicked piece becomes active piece
+            p = board.getPiece(destX, destY);
+            if (p != null && p.isWhite() == board.getActivePiece().isWhite()) {
+                board.setActivePiece(p);
+                return;
+            }
+
             // If move correct
-            if (activePiece.isWhite() == board.isWhiteMoves && activePiece.isMoveCorrect(destX, destY)) {
+            if (board.getActivePiece().isWhite() == board.isWhiteMoves 
+                    && board.getActivePiece().isMoveCorrect(destX, destY)) {
+
                 // Capture enemy's piece if it is there
                 board.deletePiece(destX, destY);
 
                 // Move active piece
-                activePiece.setX(destX);
-                activePiece.setY(destY);
+                board.getActivePiece().setX(destX);
+                board.getActivePiece().setY(destY);
 
-                board.isWhiteMoves = !board.isWhiteMoves;
+                board.changeTurn();
             }
 
-            isMoveStarted = false;
+            board.setActivePiece(null);
             board.repaint();
         }
 

@@ -3,6 +3,7 @@ package pieces;
 import chessgui.Board;
 
 public class Rook extends Piece{
+    boolean hasMoved = false;
 
     public Rook(int x, int y, boolean isWhite, Board board) {
         super(x, y, isWhite, Type.ROOK, 5, board); 
@@ -10,9 +11,6 @@ public class Rook extends Piece{
 
     @Override 
     public boolean isMoveCorrect(int destX, int destY) {
-        int startX = board.getActivePieceX();
-        int startY = board.getActivePieceY();
-
         // Check if piece tries to take same color piece
         if (isTakesSameColorPiece(destX, destY)) 
             return false;
@@ -20,30 +18,32 @@ public class Rook extends Piece{
         int from, to;
 
         // Same column 
-        if (startX == destX) {
+        if (getX() == destX) {
             // Check if there are pieces between
-            from = Math.min(startY, destY);
-            to = Math.max(startY, destY);
+            from = Math.min(getY(), destY);
+            to = Math.max(getY(), destY);
             
             for (int i = from + 1; i < to; i++) {
-                if (board.getPiece(startX, i) != null)
+                if (board.getPiece(getX(), i) != null)
                     return false;
             }
 
+            hasMoved = true;
             return true;
         }
 
         // Same row
-        if (startY == destY) {
+        if (getY() == destY) {
             // Check if there are pieces between 
-            from = Math.min(startX, destX);
-            to = Math.max(startX, destX);
+            from = Math.min(getX(), destX);
+            to = Math.max(getX(), destX);
             
             for (int i = from + 1; i < to; i++) {
-                if (board.getPiece(i, startY) != null)
+                if (board.getPiece(i, getY()) != null)
                     return false;
             } 
 
+            hasMoved = true;
             return true;
         }
 

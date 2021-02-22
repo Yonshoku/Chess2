@@ -10,9 +10,6 @@ public class Bishop extends Piece{
 
     @Override
     public boolean isMoveCorrect(int destX, int destY) {
-        int startX = board.getActivePieceX();
-        int startY = board.getActivePieceY();
-
         // Check if it takes same color piece
         if (isTakesSameColorPiece(destX, destY))
             return false;
@@ -20,17 +17,16 @@ public class Bishop extends Piece{
         // "Main' diagonal, from left top to right bottom
         // (0,1) and (4,5) -> (0 - 4) / (1 - 5) = (4 - 0) / (5 - 1) = 1
         int fromX, fromY;
-        int fieldsBetween = Math.abs(startX - destX) - 1;
+        int fieldsBetween = Math.abs(getX() - destX) - 1;
 
-        if ((startX - destX) / (startY - destY) == 1) {
+        if ((getX() - destX) / (getY() - destY) == 1) {
             
             // Check if there are pieces between 
-            fromX = Math.min(startX, destX);
-            fromY = Math.min(startY, destY);
+            fromX = Math.min(getX(), destX);
+            fromY = Math.min(getY(), destY);
 
             for (int i = 1; i <= fieldsBetween; i++) {
                 if (board.getPiece(fromX + i, fromY + i) != null) {
-                    System.out.println((fromX + i) + " " + (fromY + i));
                     return false;
                 }
             }
@@ -42,13 +38,13 @@ public class Bishop extends Piece{
         // (7,1) and (2,6) -> (7 - 2) / (1 - 6) = (2 - 7) / (6 - 1) = -1
         int m;
 
-        if ((startX - destX) / (startY - destY) == -1) {
+        if ((getX() - destX) / (getY() - destY) == -1) {
             
             // Check if there are pieces between
-            m = startX > destX ? -1 : 1;
+            m = getX() > destX ? -1 : 1;
 
             for (int i = 1; i <= fieldsBetween; i++) {
-                if (board.getPiece(startX + i * m, startY + i * -m) != null)
+                if (board.getPiece(getX() + i * m, getY() + i * -m) != null)
                     return false;
             }
 
