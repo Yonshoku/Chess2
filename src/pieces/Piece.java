@@ -1,4 +1,6 @@
-package pieces;
+package pieces; 
+
+import chessgui.Board;
 
 import java.awt.image.*;
 
@@ -6,13 +8,30 @@ public class Piece {
     protected Type type;
     protected boolean isWhite;
     protected int x, y, value;
+    protected Board board;
 
-    public Piece(int x, int y, boolean isWhite, Type type, int value) {
+    public Piece(int x, int y, boolean isWhite, Type type, int value, Board board) {
         this.x = x;
         this.y = y;
         this.isWhite = isWhite;
         this.type = type;
         this.value = value;
+        this.board = board;
+    }
+    
+    public boolean isMoveCorrect(int destX, int destY) {
+        return true; 
+    }
+
+    public boolean isTakesSameColorPiece(int destX, int destY) {
+        Piece active = board.getPiece(board.getActivePieceX(), board.getActivePieceY());
+        Piece toCapture = board.getPiece(destX, destY);
+
+        if (active != null && toCapture != null) {
+            return active.isWhite() == toCapture.isWhite();
+        }
+
+        return false;
     }
 
     public Type getType() {

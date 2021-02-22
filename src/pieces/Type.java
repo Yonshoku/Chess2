@@ -1,4 +1,4 @@
-package pieces;
+package pieces; 
 
 public enum Type {
     BISHOP,
