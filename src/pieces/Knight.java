@@ -1,27 +1,20 @@
 package pieces; 
  
-import chessgui.Board;
+import chessgui.*;
 
 public class Knight extends Piece{
-    int[][] possibleMoves = {
-        {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}, {2, -1}, {2, 1}
-    };
-
-    public Knight(int x, int y, boolean isWhite, Board board) {
-        super(x, y, isWhite, Type.KNIGHT, 3, board);  
+    public Knight(boolean isWhite) {
+        super(isWhite, Type.KNIGHT, 3);  
     }
     
     @Override
-    public boolean isMoveCorrect(int destX, int destY) {
-
-        if (isTakesSameColorPiece(destX, destY))
+    public boolean isMoveCorrect(int fromX, int fromY, int toX, int toY) {
+        if (doesCaptureOwnPiece(fromX, fromY, toX, toY))
             return false;
+        
+        int x = Math.abs(fromX - toX);
+        int y = Math.abs(fromY - toY);
 
-        for (int i = 0; i < possibleMoves.length; i++) {
-            if (destX == getX() + possibleMoves[i][0] && destY == getY() + possibleMoves[i][1])
-                return true;
-        }
-
-        return false;
+        return x * y == 2;
     }
 }

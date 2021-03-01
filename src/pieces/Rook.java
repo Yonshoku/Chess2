@@ -5,26 +5,25 @@ import chessgui.Board;
 public class Rook extends Piece{
     boolean hasMoved = false;
 
-    public Rook(int x, int y, boolean isWhite, Board board) {
-        super(x, y, isWhite, Type.ROOK, 5, board); 
+    public Rook(boolean isWhite) {
+        super(isWhite, Type.ROOK, 5); 
     }
 
     @Override 
-    public boolean isMoveCorrect(int destX, int destY) {
+    public boolean isMoveCorrect(int fromX, int fromY, int toX, int toY) {
         // Check if piece tries to take same color piece
-        if (isTakesSameColorPiece(destX, destY)) 
+        if (doesCaptureOwnPiece(fromX, fromY, toX, toY)) 
             return false;
-        
-        int from, to;
 
         // Same column 
-        if (getX() == destX) {
-            // Check if there are pieces between
-            from = Math.min(getY(), destY);
-            to = Math.max(getY(), destY);
-            
-            for (int i = from + 1; i < to; i++) {
-                if (board.getPiece(getX(), i) != null)
+        if (fromX == toX) {
+
+            // Check if any pieces between
+            int dir = fromY > toY ? -1 : 1;
+            int fieldsBetween = Math.abs(fromY - toY) - 1;
+
+            for (int i = 1; i <= fieldsBetween; i++) {
+                if (position.getPiece(fromX, fromY + dir * i) != null)
                     return false;
             }
 
@@ -33,15 +32,15 @@ public class Rook extends Piece{
         }
 
         // Same row
-        if (getY() == destY) {
-            // Check if there are pieces between 
-            from = Math.min(getX(), destX);
-            to = Math.max(getX(), destX);
-            
-            for (int i = from + 1; i < to; i++) {
-                if (board.getPiece(i, getY()) != null)
+        if (fromY == toY) {
+
+            int dir = fromX > toX ? -1 : 1;
+            int fieldsBetween = Math.abs(fromX - toX) - 1;
+
+            for (int i = 1; i <= fieldsBetween; i++) {
+                if (position.getPiece(fromX + dir * i, fromY) != null)
                     return false;
-            } 
+            }
 
             hasMoved = true;
             return true;
@@ -49,6 +48,10 @@ public class Rook extends Piece{
 
         // Neither same column nor same row
         return false;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
     }
 
 }

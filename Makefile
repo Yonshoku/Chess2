@@ -1,6 +1,6 @@
 all: compile run
 
-compile: src/chessgui/Board.java src/chessgui/ChessFrame.java src/pieces/Rook.java  src/pieces/King.java src/pieces/Queen.java src/pieces/Knight.java src/pieces/Bishop.java src/pieces/Pawn.java
+compile: 
 	javac -d bin src/pieces/*.java src/chessgui/*.java 
 
 run: src/chessgui/ChessFrame.java

@@ -1,68 +1,32 @@
 package pieces; 
  
-import chessgui.Board;
+import chessgui.*;
 
 public class Pawn extends Piece{
     boolean hasMoved = false;
-    boolean isBottomSide = (isWhite() != board.isPositionReversed());
+    boolean isBottomSide = (isWhite() != position.isPositionReversed());
+    int dirY = isBottomSide ? 1 : -1;
 
-    public Pawn(int x, int y, boolean isWhite, Board board) {
-        super(x, y, isWhite, Type.PAWN, 1, board); 
+    public Pawn(boolean isWhite) {
+        super(isWhite, Type.PAWN, 1); 
     }
 
     @Override 
-    public boolean isMoveCorrect(int destX, int destY) {
+    public boolean isMoveCorrect(int fromX, int fromY, int toX, int toY) {
+        // Move forward
+        if (fromY - toY == dirY && fromX == toX
+                && position.getPiece(toX, toY) == null) 
+            return true;
 
-        if (isBottomSide) {
-            // Move forward
-            if (getY() - destY == 1 && getX() == destX
-                    && board.getPiece(destX, destY) == null) {
-                hasMoved = true;
-                return true;
-            }
+        if (doesCapturePassantPawn(fromX, fromY, toX, toY)
+                || doesMovesTwoFieldForward(fromX, fromY, toX, toY)) 
+            return true; 
 
-            // Move forward from starting position by 2 fields
-            if (getY() - destY == 2 && getX() == destX
-                    && board.getPiece(destX, destY) == null
-                    && board.getPiece(destX, destY + 1) == null
-                    && !hasMoved) {
-                hasMoved = true;
-                return true;
-            }
-
-            // Capture enemy's piece
-            if (getY() - destY == 1 && (getX() - destX == 1 || getX() - destX == -1)
-                    && board.getPiece(destX, destY) != null
-                    && !isTakesSameColorPiece(destX, destY)) {
-                hasMoved = true;
-                return true;
-            }
-
-        } else {
-            // Move forward
-            if (getY() - destY == -1 && getX() == destX
-                    && board.getPiece(destX, destY) == null) {
-                hasMoved = true;
-                return true;
-            }
-
-            // Move forward from starting position by 2 fields
-            if (getY() - destY == -2 && getX() == destX
-                    && board.getPiece(destX, destY) == null
-                    && board.getPiece(destX, destY - 1) == null 
-                    && !hasMoved) {
-                hasMoved = true;
-                return true;
-            }
-
-            // Capture enemy's piece
-            if (getY() - destY == -1 && (getX() - destX == 1 || getX() - destX == -1)
-                    && board.getPiece(destX, destY) != null
-                    && !isTakesSameColorPiece(destX, destY)) { 
-                hasMoved = true;
-                return true;
-            }
-        }
+        // Capture enemy's piece
+        if (fromY - toY == dirY && Math.abs(fromX - toX) == 1
+                && position.getPiece(toX, toY) != null
+                && !doesCaptureOwnPiece(fromX, fromY, toX, toY)) 
+            return true;
 
         return false;
     }
@@ -74,4 +38,35 @@ public class Pawn extends Piece{
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved; 
     }
+
+    public boolean doesCapturePassantPawn(int fromX, int fromY, int toX, int toY){
+        Move lastMove = MovesLog.getMovesLog().getLastMove();  
+
+        if (lastMove == null) 
+            return false;
+
+        else if (lastMove.getMovedPiece().getType() == Type.PAWN 
+                    && Math.abs(lastMove.getFromY() - lastMove.getToY()) == 2 // Passant pawn exists
+                    && Math.abs(lastMove.getToX() - fromX) == 1
+                    && lastMove.getToY() == fromY // Passant pawn stays to the left or right and on one line
+                    && Math.abs(fromX - toX) == 1 && fromY - toY == dirY) // This pawn moves diagonally
+            return true;
+
+        return false;
+    }
+
+    public boolean doesMovesTwoFieldForward(int fromX, int fromY, int toX, int toY) {
+        if (fromY - toY == dirY * 2 && fromX == toX
+                && position.getPiece(toX, toY) == null
+                && position.getPiece(toX, toY + dirY) == null
+                && !hasMoved)
+            return true;
+
+        return false;
+    }
+
+    public int getDirY() {
+        return dirY;
+    }
+
 }

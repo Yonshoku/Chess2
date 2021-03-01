@@ -4,16 +4,16 @@ import chessgui.Board;
 
 public class Queen extends Piece{
 
-    public Queen(int x, int y, boolean isWhite, Board board) {
-        super(x, y, isWhite, Type.QUEEN, 9, board); 
+    public Queen(boolean isWhite) {
+        super(isWhite, Type.QUEEN, 9); 
     }
 
     @Override
-    public boolean isMoveCorrect(int destX, int destY) {
-        Bishop b = new Bishop(getX(), getY(), isWhite(), board);
-        Rook r = new Rook(getX(), getY(), isWhite(), board);
+    public boolean isMoveCorrect(int fromX, int fromY, int toX, int toY) {
+        Bishop b = new Bishop(isWhite());
+        Rook r = new Rook(isWhite());
 
-        return r.isMoveCorrect(destX, destY) || b.isMoveCorrect(destX, destY);
+        return r.isMoveCorrect(fromX, fromY, toX, toY) || b.isMoveCorrect(fromX, fromY, toX, toY);
     }
 }
 

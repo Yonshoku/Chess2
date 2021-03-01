@@ -3,9 +3,7 @@ package chessgui;
 import javax.swing.*;
 import java.awt.*;
 
-
 public class ChessFrame{
-    
     private String title = "Chess";
     private int frameWidth = 520;
     private int frameHeight = 520;
@@ -14,6 +12,8 @@ public class ChessFrame{
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new ChessFrame();
+                Game.getGame();
+                Board.getBoard().addMouseListener(new Handler());
             }
         });
     }
@@ -24,7 +24,7 @@ public class ChessFrame{
         frame.setLocationByPlatform(true);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        frame.setContentPane(new Board(this));
+        frame.setContentPane(Board.getBoard());
         frame.pack();
         frame.setVisible(true);
     }

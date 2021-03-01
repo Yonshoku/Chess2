@@ -1,11 +1,20 @@
 package pieces; 
  
- import chessgui.Board;
+import chessgui.Board;
 
 public class King extends Piece{
+    private boolean hasMoved = false;
 
-    public King(int x, int y, boolean isWhite, Board board) {
-        super(x, y, isWhite, Type.KING, 0, board); 
+    public King(boolean isWhite) {
+        super(isWhite, Type.KING, 0); 
     }
 
+    @Override 
+    public boolean isMoveCorrect(int fromX, int fromY, int toX, int toY) {
+        return true;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
 }

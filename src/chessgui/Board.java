@@ -12,109 +12,50 @@ import javax.imageio.*;
 import java.io.*;
 
 public class Board extends JPanel {
-
+    
+    private static Board board;
     private int boardSize = 520;
     private int fieldSize = boardSize / 8;
     private int pieceSize = Math.round(fieldSize * 0.8f);
     private int COLS = 8;
     private int ROWS = 8;
-    private ChessFrame frame;
 
     private HashMap<String, Color> colors = new HashMap<String, Color>();
     private Map<Type, BufferedImage> whitePiecesImages = new HashMap<Type, BufferedImage>(); 
     private Map<Type, BufferedImage> blackPiecesImages = new HashMap<Type, BufferedImage>(); 
-    private java.util.List<Piece> whitePieces = new ArrayList<Piece>();
-    private java.util.List<Piece> blackPieces = new ArrayList<Piece>();
 
     private String pathToImages = "bin" + File.separator + "images" + File.separator;
 
-    // Black are at the bottom and white at the top
-    boolean isPositionReversed = new Random().nextInt(2) > 0 ? true : false; 
-    boolean isWhiteMoves = true;
-    Piece activePiece = null;
+    public static final Board getBoard() {
+        // First creation 
+        if (board == null) {
+            board = new Board();
+        }
 
-    // Constructor
-    public Board(ChessFrame frame) {
-        addMouseListener(new Handler(this));
-        this.frame = frame;
+        return board;
+    }
 
+    public Board() {
         // Initialize variables 
         colors.put("boardLight", new Color(189, 174, 160));
         colors.put("boardDark", new Color(75, 66, 56));
 
         // Load pieces images
         loadPiecesImages();
-
-        // Init position
-        initPosition();
-        if (isPositionReversed) 
-            reversePosition();
     }
-
-    // Position initialization
-    public void initPosition() {
-        whitePieces.add(new Rook(0, 7, true, this));
-        whitePieces.add(new Knight(1, 7, true, this));
-        whitePieces.add(new Bishop(2, 7, true, this));
-        whitePieces.add(new Queen(3, 7, true, this));
-        whitePieces.add(new King(4, 7, true, this));
-        whitePieces.add(new Bishop(5, 7, true, this));
-        whitePieces.add(new Knight(6, 7, true, this));
-        whitePieces.add(new Rook(7, 7, true, this)); 
-
-        whitePieces.add(new Pawn(0, 6, true, this));
-        whitePieces.add(new Pawn(1, 6, true, this));
-        whitePieces.add(new Pawn(2, 6, true, this));
-        whitePieces.add(new Pawn(3, 6, true, this));
-        whitePieces.add(new Pawn(4, 6, true, this));
-        whitePieces.add(new Pawn(5, 6, true, this));
-        whitePieces.add(new Pawn(6, 6, true, this));
-        whitePieces.add(new Pawn(7, 6, true, this));
-
-        blackPieces.add(new Rook(0, 0, false, this)); 
-        blackPieces.add(new Knight(1, 0, false, this)); 
-        blackPieces.add(new Bishop(2, 0, false, this)); 
-        blackPieces.add(new Queen(3, 0, false, this)); 
-        blackPieces.add(new King(4, 0, false, this)); 
-        blackPieces.add(new Bishop(5, 0, false, this)); 
-        blackPieces.add(new Knight(6, 0, false, this)); 
-        blackPieces.add(new Rook(7, 0, false, this)); 
-
-        blackPieces.add(new Pawn(0, 1, false, this)); 
-        blackPieces.add(new Pawn(1, 1, false, this)); 
-        blackPieces.add(new Pawn(2, 1, false, this)); 
-        blackPieces.add(new Pawn(3, 1, false, this)); 
-        blackPieces.add(new Pawn(4, 1, false, this)); 
-        blackPieces.add(new Pawn(5, 1, false, this)); 
-        blackPieces.add(new Pawn(6, 1, false, this)); 
-        blackPieces.add(new Pawn(7, 1, false, this)); 
-    }
-
-    public void reversePosition() {
-        for (Piece p : whitePieces) {
-            p.setX(COLS - 1 - p.getX());
-            p.setY(ROWS - 1 - p.getY());
-        }
-
-        for (Piece p : blackPieces) {
-            p.setX(COLS - 1 - p.getX());
-            p.setY(ROWS - 1 - p.getY());
-        }
-    }
-   
 
     // Main painting method
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
         paintBoard(g);
-        paintPieces(g);
+        paintPieces(g, Position.getPosition().getLayout());
     }
 
     // Size of the board
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(frame.getWidth(), frame.getHeight());
+        return new Dimension(520, 520);
     }
 
     // Paint methods
@@ -143,80 +84,36 @@ public class Board extends JPanel {
 
     }
     
-    public void paintPieces(Graphics g) {
-        // align pieces center of field
-        int pieceMargin = (fieldSize - pieceSize) / 2;
+    public void paintPieces(Graphics g, Piece[][] layout) {
+        // Centralize pieces
+        int marginX = (fieldSize - whitePiecesImages.get(Type.BISHOP).getWidth()) / 2;
+        int marginY = (fieldSize - whitePiecesImages.get(Type.BISHOP).getHeight()) / 2;
 
-        for (Piece piece : whitePieces) {
-            g.drawImage(whitePiecesImages.get(piece.getType()), getXCoord(piece.getX()) + pieceMargin, getYCoord(piece.getY()) + pieceMargin, null);
-        }
-
-        for (Piece piece : blackPieces) {
-            g.drawImage(blackPiecesImages.get(piece.getType()), getXCoord(piece.getX()) + pieceMargin, getYCoord(piece.getY()) + pieceMargin, null);
-        }
-    }
-
-    public int getXCoord(int x) {
-        return fieldSize * x;
-    }
-
-    public int getYCoord(int y) {
-        return fieldSize * y;
-    } 
-
-    public int getX(int xCoord) {
-        return xCoord / fieldSize;
-    }
-
-    public int getY(int yCoord) {
-        return yCoord / fieldSize; 
-    }
-
-    public Piece getPiece(int x, int y) {
-        for (Piece p : whitePieces) {
-            if (p.getX() == x && p.getY() == y) 
-                return p;
-        }
-
-        for (Piece p : blackPieces) {
-            if (p.getX() == x && p.getY() == y) 
-                return p;
-        }
-
-        return null;
-    }
-
-    public void deletePiece(int x, int y) {
-        Iterator<Piece> it = whitePieces.iterator();
         Piece p;
-        while (it.hasNext()) {
-            p = it.next();
-            if (p.getX() == x && p.getY() == y)
-                it.remove();
+
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                p = Position.getPosition().getPiece(i, j);
+
+                if (p != null) {
+                    if (p.isWhite()) 
+                        g.drawImage(whitePiecesImages.get(p.getType()),
+                            i * fieldSize + marginX, j * fieldSize + marginY, null);
+                    else  
+                        g.drawImage(blackPiecesImages.get(p.getType()),
+                            i * fieldSize + marginX, j * fieldSize + marginY, null);
+                }
+            }
         }
 
-        it = blackPieces.iterator();
-        while (it.hasNext()) {
-            p = it.next();
-            if (p.getX() == x && p.getY() == y)
-                it.remove();
-        }
     }
 
-    public Piece getActivePiece() {
-        return activePiece;
+    public int getX(int x) {
+        return x / fieldSize;
     }
-
-    public void setActivePiece(Piece activePiece) {
-        this.activePiece = activePiece;
-    }
-
-    public boolean isPositionReversed() {
-        return isPositionReversed;
-    }
-
-    public void changeTurn() {
-        isWhiteMoves = !isWhiteMoves;
+    
+    public int getY(int y) {
+        return y / fieldSize;
     }
 
     // Image handling methods 
@@ -261,6 +158,15 @@ public class Board extends JPanel {
         g2d.drawImage(image, 0, 0, targetWidth, targetHeight, null);
 
         return resized;
+    }
+
+    // Getters and setters
+    public int getRows() {
+        return ROWS;
+    }
+
+    public int getCols() {
+        return COLS;
     }
     
 }
