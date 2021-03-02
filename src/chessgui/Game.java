@@ -34,7 +34,7 @@ public class Game {
     public void processMove(int fromX, int fromY, int toX, int toY) {
         pieceToMove = position.getPiece(fromX, fromY);
         
-        // The rights side is making move
+        // The right side is making move
         if(pieceToMove.isWhite() != position.isWhiteTurn())
             return;
 
@@ -44,36 +44,52 @@ public class Game {
 
             if (pawn.isMoveCorrect(fromX, fromY, toX, toY)) {
                 if (pawn.doesCapturePassantPawn(fromX, fromY, toX, toY)) {
+                    movesLog.add(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, fromY), toX, toY, MoveType.PASSANT)); 
+                    movesLog.incrementMovesNum();
+
                     position.deletePiece(fromX, fromY);
                     position.addPiece(pieceToMove, toX, toY);
                     position.deletePiece(toX, fromY);
                 } else {
-                    makeMove(fromX, fromY, toX, toY);
+                    makeMove(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR)); 
                 }
 
+                pawn.setHasMoved(true); 
                 isMoveMade = true;
             }
 
         } else if(pieceToMove.isMoveCorrect(fromX, fromY, toX, toY)) {
-            makeMove(fromX, fromY, toX, toY);
+            makeMove(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR)); 
 
             isMoveMade = true;
         }
 
         if (isMoveMade) {
-            // Write moves which was made
-            movesLog.add(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, toY), toX, toY)); 
-            movesLog.plusOneMovesMade();
-
             position.changeTurn();
             board.repaint();
             isMoveMade = false;
         }
     }
 
-    public void makeMove(int fromX, int fromY, int toX, int toY) {
-        position.deletePiece(fromX, fromY); 
-        position.deletePiece(toX, toY);
-        position.addPiece(pieceToMove, toX, toY);
+    public void makeMove(Move move) {
+        movesLog.add(move); 
+        movesLog.incrementMovesNum();
+
+        position.deletePiece(move.getFromX(), move.getFromY()); 
+        position.deletePiece(move.getToX(), move.getToY());
+        position.addPiece(move.getMovedPiece(), move.getToX(), move.getToY());
+    }
+
+    public void undoMove() {
+        Move moveToUndo = movesLog.getLastMove();
+
+        if (moveToUndo.getType() == MoveType.REGULAR) {
+            position.deletePiece(moveToUndo.getToX(), moveToUndo.getToY());
+            position.addPiece(moveToUndo.getCapturedPiece(), moveToUndo.getToX(), moveToUndo.getToY());
+            position.addPiece(moveToUndo.getMovedPiece(), moveToUndo.getFromX(), moveToUndo.getFromY());
+        }
+
+        movesLog.deleteLastMove();
+        movesLog.decrementMovesNum();
     }
 }

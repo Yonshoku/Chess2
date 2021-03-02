@@ -10,7 +10,7 @@ public class Position {
     int ROWS = Board.getBoard().getRows();
     int COLS = Board.getBoard().getCols();
     Piece[][] layout = new Piece[ROWS][COLS];
-    boolean isPositionReversed = new Random().nextInt(2) == 1 ? true : false;
+    boolean isLayoutReversed = new Random().nextInt(2) == 1 ? true : false;
 
     boolean isWhiteTurn = true;
     Pawn passantPawn;
@@ -67,12 +67,12 @@ public class Position {
             }
         }
 
-        if (isPositionReversed) { 
-            reversePosition();
+        if (isLayoutReversed) { 
+            reverseLayout();
         }
     }
 
-    public void reversePosition() {
+    public void reverseLayout() {
         Piece p;
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS / 2; j++) {
@@ -83,8 +83,8 @@ public class Position {
         }
     }
 
-    public boolean isPositionReversed() {
-        return isPositionReversed;
+    public boolean isLayoutReversed() {
+        return isLayoutReversed;
     }
 
     public Piece[][] getLayout() {
@@ -118,6 +118,21 @@ public class Position {
         } catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public boolean isFieldAttackedByEnemy(Piece p, int x, int y) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                if (layout[i][j] != null) {
+                    if ((i != x && j != y) && p.isWhite() != layout[i][j].isWhite()
+                            && layout[i][j].isMoveCorrect(i, j, x, y)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public void changeTurn() {

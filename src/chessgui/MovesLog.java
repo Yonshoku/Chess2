@@ -4,7 +4,7 @@ import java.util.*;
 
 public class MovesLog {
     private static MovesLog movesLog;
-    private int movesMade = 0;
+    private int movesNum = 0;
     private List<Move> log = new ArrayList<Move>();     
     
     public static final MovesLog getMovesLog() {
@@ -21,7 +21,7 @@ public class MovesLog {
 
     public void reset() {
         log.clear();
-        movesMade = 0;
+        movesNum = 0;
     }
 
     public Move getMove(int num) {
@@ -32,15 +32,24 @@ public class MovesLog {
         if (log.size() == 0)
             return null;
 
-        return getMove(movesMade - 1);
+        return getMove(movesNum - 1);
     }
 
-    public int getMovesMade() {
-        return movesMade;
+    public void deleteLastMove() {
+        log.remove(movesNum - 1);
     }
 
-    public void plusOneMovesMade() {
-        movesMade++;
+    public int getMovesNum() {
+        return movesNum;
+    }
+
+    public void incrementMovesNum() {
+        movesNum++;
+    }
+    
+    public void decrementMovesNum() {
+        if (movesNum > 0)
+            movesNum--;
     }
 }
 
