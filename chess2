@@ -1,0 +1,220 @@
+let SessionLoad = 1
+let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
+let v:this_session=expand("<sfile>:p")
+silent only
+cd C:\code\chess2
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+set shortmess=aoO
+badd +94 ~\AppData\Local\nvim\init.vim
+badd +3 c:\code\chess\src\chess\..\..\Makefile
+badd +2 c:\code\Projects\lifeprogram\src\main\java\lifeprogram\App.java
+badd +14 c:\code\Projects\lifeprogram\src\main\java\lifeprogram\XMLDatabase.java
+badd +40 c:\code\chess\src\chess\Display.java
+badd +21 c:\code\chess\src\chess\Chess.java
+badd +59 c:\code\chess\src\chess\Renderer.java
+badd +8 c:\code\chess\src\chess\Piece.java
+badd +38 c:\code\chess\src\chess\Rook.java
+badd +20 c:\code\chess\src\chess\Bishop.java
+badd +30 c:\code\chess\src\chess\Knight.java
+badd +50 c:\code\chess\src\chess\Pawn.java
+badd +16 c:\code\chess2\src\chessgui\ChessFrame.java
+badd +4 c:\code\chess2\Makefile
+badd +59 c:\code\chess2\src\chessgui\Board.java
+badd +1 c:\code\chess2\src\chessgui\ChessGUI.java
+badd +54 c:\code\chess2\src\pieces\Rook.java
+badd +295 c:\Users\eeeli\AppData\Local\nvim\vim-snippets\snippets\java.snippets
+badd +1 c:\users\eeeli\appdata\local\nvim\ultisnips\java.snippets
+badd +2 c:\users\eeeli\appdata\local\nvim\vim-snippets\ultisnips\java.snippets
+badd +6 c:\code\chess2\src\pieces\Type.java
+badd +21 c:\code\chess2\src\pieces\Bishop.java
+badd +11 c:\code\javatest\src\Main.java
+badd +4 c:\code\javatest/Makefile
+badd +1 c:\code\javatest\src/Parent.java
+badd +1 c:\code\javatest\src/Second.java
+badd +11 c:\code\chess2\src\pieces\Piece.java
+badd +15 c:\code\chess2\src\pieces\King.java
+badd +12 c:\code\chess2\src\pieces\Knight.java
+badd +50 c:\code\chess2\src\pieces\Pawn.java
+badd +16 c:\code\chess2\src\pieces\Queen.java
+badd +49 c:\code\chess2\src\chessgui\Handler.java
+badd +5 ~\AndroidStudioProjects\comAttakaiyorufirstApp\app\src\androidTest\java\com\example\comattakaiyorufirstapp\ExampleInstrumentedTest.java
+badd +1 ~\AndroidStudioProjects\comAttakaiyorufirstApp\app\src\test\java\com\example\comattakaiyorufirstapp\ExampleUnitTest.java
+badd +1 ~\AppData\Roaming\Code\User\workspaceStorage\cbd658a08209fa3bccb924efefbdc3f7\redhat.java
+badd +1 ~\NERD_tree_13
+badd +18 c:\code\chess2\src\chessgui\Position.java
+badd +31 c:\code\chess2\src\chessgui\Game.java
+badd +10 c:\code\chess2\src\chessgui\MovesLog.java
+badd +14 c:\code\chess2\src\chessgui\Move.java
+badd +3 c:\code\chess2\src\chessgui\MoveType.java
+argglobal
+%argdel
+$argadd c:\code\chess2\src\pieces\Bishop.java
+$argadd c:\code\chess2\src\chessgui\Board.java
+$argadd c:\code\chess2\src\chessgui\ChessFrame.java
+$argadd c:\code\chess2\src\chessgui\Game.java
+$argadd c:\code\chess2\src\chessgui\Handler.java
+$argadd c:\code\chess2\src\chessgui\Move.java
+$argadd c:\code\chess2\src\chessgui\MoveType.java
+$argadd c:\code\chess2\src\chessgui\MovesLog.java
+$argadd c:\code\chess2\src\chessgui\Position.java
+$argadd c:\code\chess2\src\pieces\Bishop.java
+$argadd c:\code\chess2\src\pieces\King.java
+$argadd c:\code\chess2\src\pieces\Knight.java
+$argadd c:\code\chess2\src\pieces\Pawn.java
+$argadd c:\code\chess2\src\pieces\Piece.java
+$argadd c:\code\chess2\src\pieces\Queen.java
+$argadd c:\code\chess2\src\pieces\Rook.java
+$argadd c:\code\chess2\src\pieces\Type.java
+$argadd c:\code\chess2\src\pieces\King.java
+$argadd c:\code\chess2\src\pieces\Knight.java
+$argadd c:\code\chess2\src\pieces\Pawn.java
+$argadd c:\code\chess2\src\pieces\Piece.java
+$argadd c:\code\chess2\src\pieces\Queen.java
+$argadd c:\code\chess2\src\pieces\Rook.java
+$argadd c:\code\chess2\src\pieces\Type.java
+edit c:\code\chess2\src\chessgui\ChessFrame.java
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+argglobal
+if bufexists("c:\code\chess2\src\chessgui\ChessFrame.java") | buffer c:\code\chess2\src\chessgui\ChessFrame.java | else | edit c:\code\chess2\src\chessgui\ChessFrame.java | endif
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 45 - ((38 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+45
+normal! 0
+tabedit c:\code\chess2\src\chessgui\Board.java
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+argglobal
+if bufexists("c:\code\chess2\src\chessgui\Board.java") | buffer c:\code\chess2\src\chessgui\Board.java | else | edit c:\code\chess2\src\chessgui\Board.java | endif
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 82 - ((45 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+82
+normal! 09|
+tabedit c:\code\chess2\src\pieces\Pawn.java
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+argglobal
+if bufexists("c:\code\chess2\src\pieces\Pawn.java") | buffer c:\code\chess2\src\pieces\Pawn.java | else | edit c:\code\chess2\src\pieces\Pawn.java | endif
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 34 - ((33 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+34
+normal! 031|
+tabedit c:\code\chess2\src\chessgui\Game.java
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+argglobal
+if bufexists("c:\code\chess2\src\chessgui\Game.java") | buffer c:\code\chess2\src\chessgui\Game.java | else | edit c:\code\chess2\src\chessgui\Game.java | endif
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+tabedit c:\code\chess2\src\chessgui\Position.java
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+argglobal
+if bufexists("c:\code\chess2\src\chessgui\Position.java") | buffer c:\code\chess2\src\chessgui\Position.java | else | edit c:\code\chess2\src\chessgui\Position.java | endif
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 145 - ((45 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+145
+normal! 0
+tabnext 1
+if exists('s:wipebuf') && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20 winminheight=1 winminwidth=1 shortmess=filnxtToOFc
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if file_readable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &so = s:so_save | let &siso = s:siso_save
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

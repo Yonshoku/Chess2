@@ -3,6 +3,7 @@ package chessgui;
 import pieces.*;
 
 import javax.swing.*;
+import javax.swing.JComponent.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -13,8 +14,8 @@ import java.io.*;
 
 public class Board extends JPanel {
     
-    private static Board board;
-    private int boardSize = 520;
+    private static Board board = new Board();
+    private int boardSize = ChessFrame.getInstance().getWidth();
     private int fieldSize = boardSize / 8;
     private int pieceSize = Math.round(fieldSize * 0.8f);
     private int COLS = 8;
@@ -26,17 +27,12 @@ public class Board extends JPanel {
 
     private String pathToImages = "bin" + File.separator + "images" + File.separator;
 
-    public static final Board getBoard() {
-        // First creation 
-        if (board == null) {
-            board = new Board();
-        }
-
+    public static final Board getInstance() {
         return board;
     }
 
-    public Board() {
-        // Initialize variables 
+    private Board() {
+        // Initialize colors 
         colors.put("boardLight", new Color(189, 174, 160));
         colors.put("boardDark", new Color(75, 66, 56));
 
@@ -44,18 +40,27 @@ public class Board extends JPanel {
         loadPiecesImages();
     }
 
+    public void fillBoardContentPane() {
+        setLayout(new OverlayLayout(this)); 
+        add(PawnTransformOverlay.getInstance());
+    }
+
     // Main painting method
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
         paintBoard(g);
-        paintPieces(g, Position.getPosition().getLayout());
+        paintPieces(g, Position.getInstance().getLayout());
     }
 
     // Size of the board
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(520, 520);
+        return new Dimension(boardSize, boardSize);
+    }
+
+    public boolean setOptimizedDrawingEnabled() {
+        return false;
     }
 
     // Paint methods
@@ -93,7 +98,7 @@ public class Board extends JPanel {
 
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
-                p = Position.getPosition().getPiece(i, j);
+                p = Position.getInstance().getPiece(i, j);
 
                 if (p != null) {
                     if (p.isWhite()) 
@@ -168,7 +173,17 @@ public class Board extends JPanel {
     public int getCols() {
         return COLS;
     }
-    
+
+    public int getBoardSize() {
+        return boardSize;
+    }
+
+    public BufferedImage getImageOfPiece(Type type, boolean isWhite) { 
+        if (isWhite) 
+            return whitePiecesImages.get(type);
+        else
+            return blackPiecesImages.get(type); 
+    }
 }
 
 

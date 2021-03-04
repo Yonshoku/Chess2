@@ -1,9 +1,13 @@
 package chessgui;
 
 import javax.swing.*;
+import javax.swing.JFrame.*;
 import java.awt.*;
 
 public class ChessFrame{
+    private static ChessFrame chessFrame = new ChessFrame();
+
+    private JFrame frame; 
     private String title = "Chess";
     private int frameWidth = 520;
     private int frameHeight = 520;
@@ -11,22 +15,36 @@ public class ChessFrame{
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new ChessFrame();
-                Game.getGame();
-                Board.getBoard().addMouseListener(new Handler());
+                // Init frame
+                ChessFrame.getInstance();
+                ChessFrame.getInstance().fillFrame();
+
+                // Init game 
+                Game.getInstance();
+                Board.getInstance();
+                Board.getInstance().fillBoardContentPane();
+                Board.getInstance().addMouseListener(new BoardMouseHandler());
             }
         });
     }
 
-    public ChessFrame() {
-        JFrame frame = new JFrame(title);
+    public static final ChessFrame getInstance() {
+        return chessFrame;
+    }
+
+    private ChessFrame() {
+        frame = new JFrame(title); 
         frame.setResizable(false);
         frame.setLocationByPlatform(true);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);        
+    }
 
-        frame.setContentPane(Board.getBoard());
+    public void fillFrame() {
+        frame.add(Board.getInstance(), BorderLayout.CENTER);
+
         frame.pack();
         frame.setVisible(true);
+
     }
 
     public int getWidth() {

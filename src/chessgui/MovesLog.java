@@ -3,17 +3,16 @@ package chessgui;
 import java.util.*;
 
 public class MovesLog {
-    private static MovesLog movesLog;
+    private static MovesLog movesLog = new MovesLog();
     private int movesNum = 0;
     private List<Move> log = new ArrayList<Move>();     
     
-    public static final MovesLog getMovesLog() {
-        if (movesLog == null) {
-            movesLog = new MovesLog();
-        }
-
+    public static final MovesLog getInstance() {
         return movesLog;
     }
+
+    // Deny access to the constructor
+    private MovesLog() {}
 
     public void add(Move move) {
         log.add(move);

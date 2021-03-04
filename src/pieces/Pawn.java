@@ -47,7 +47,7 @@ public class Pawn extends Piece{
     }
 
     public boolean doesCapturePassantPawn(int fromX, int fromY, int toX, int toY){
-        Move lastMove = MovesLog.getMovesLog().getLastMove();  
+        Move lastMove = MovesLog.getInstance().getLastMove();  
 
         if (lastMove == null) 
             return false;
@@ -60,6 +60,16 @@ public class Pawn extends Piece{
             return true;
 
         return false;
+    }
+
+    public boolean doesReachedLastLine(int toY) {
+        if (isBottomSide && toY == 0)
+            return true;
+
+        if (!isBottomSide && toY == Board.getInstance().getRows() - 1) 
+            return true;
+
+        return false; 
     }
 
 }

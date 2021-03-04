@@ -3,7 +3,7 @@ package chessgui;
 import pieces.*;
 
 public class Game {
-    private static Game game;
+    private static Game game = new Game();
 
     Position position;
     Board board;
@@ -12,23 +12,19 @@ public class Game {
     Piece pieceToMove;
     boolean isMoveMade = false;
 
-    public static final Game getGame() {
-        if (game == null) {
-            game = new Game();
-        }
-
+    public static final Game getInstance() {
         return game;
     }
 
-    public Game() {
+    private Game() {
         // Init game
-        position = Position.getPosition();
+        position = Position.getInstance();
         position.initLayout();
 
-        board = Board.getBoard();
+        board = Board.getInstance();
         board.repaint();
 
-        movesLog = movesLog.getMovesLog();
+        movesLog = movesLog.getInstance();
     } 
 
     public void processMove(int fromX, int fromY, int toX, int toY) {
@@ -50,6 +46,9 @@ public class Game {
                     position.deletePiece(fromX, fromY);
                     position.addPiece(pieceToMove, toX, toY);
                     position.deletePiece(toX, fromY);
+                } else if (pawn.doesReachedLastLine(toY)) {
+                    PawnTransformOverlay.getInstance().showOverlay(pawn.isWhite());
+                    makeMove(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR)); 
                 } else {
                     makeMove(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR)); 
                 }
@@ -91,5 +90,9 @@ public class Game {
 
         movesLog.deleteLastMove();
         movesLog.decrementMovesNum();
+    }
+
+    public void transformPawn(Piece p) {
+        movesLog.add(new Move(p))
     }
 }

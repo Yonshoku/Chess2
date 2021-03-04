@@ -22,10 +22,10 @@ public class King extends Piece{
     public boolean isKingMovesToAttackedField(int fromX, int fromY, int toX, int toY) {
         boolean isMoves = false;
 
-        Game.getGame().makeMove(new Move(this, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR));
+        Game.getInstance().makeMove(new Move(this, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR));
         if (position.isFieldAttackedByEnemy(this, toX, toY))
             isMoves = true;
-        Game.getGame().undoMove(); 
+        Game.getInstance().undoMove(); 
 
         return isMoves;
     }

@@ -4,15 +4,9 @@ import pieces.*;
 
 import java.awt.event.*;
 
-// ToDo
-// paintNotation
-// King attacked rule
-// Passant pawns
-// Color active field, last move
-// Pawn transformation
-public class Handler extends MouseAdapter {
-    Board board = Board.getBoard();
-    Position position = Position.getPosition();
+public class BoardMouseHandler extends MouseAdapter {
+    Board board = Board.getInstance();
+    Position position = Position.getInstance();
 
     Piece pieceToMove, pieceToCapture;
     boolean isMoveStarted = false;
@@ -46,7 +40,7 @@ public class Handler extends MouseAdapter {
             toX = board.getX(e.getX());
             toY = board.getY(e.getY());
 
-            Game.getGame().processMove(fromX, fromY, toX, toY);    
+            Game.getInstance().processMove(fromX, fromY, toX, toY);    
             isMoveStarted = false;
         }
     }

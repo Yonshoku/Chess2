@@ -5,23 +5,23 @@ import pieces.*;
 import java.util.*;
 
 public class Position {
-    private static Position position;
+    private static Position position = new Position();
 
-    int ROWS = Board.getBoard().getRows();
-    int COLS = Board.getBoard().getCols();
+    int ROWS = Board.getInstance().getRows();
+    int COLS = Board.getInstance().getCols();
     Piece[][] layout = new Piece[ROWS][COLS];
     boolean isLayoutReversed = new Random().nextInt(2) == 1 ? true : false;
 
     boolean isWhiteTurn = true;
     Pawn passantPawn;
 
-    public static final Position getPosition() {
-        if (position == null) {
-            position = new Position();
-        } 
-
+    public static final Position getInstance() {
         return position;
     }
+
+    // Deny access to the constructor
+    private Position() {}
+    
 
     public void initLayout() {
         layout[0][0] = new Rook(false); 

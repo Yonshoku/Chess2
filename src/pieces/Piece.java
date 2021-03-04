@@ -8,7 +8,7 @@ public class Piece {
     protected Type type;
     protected boolean isWhite;
     protected int value;
-    protected Position position = Position.getPosition(); 
+    protected Position position = Position.getInstance(); 
 
     public Piece(boolean isWhite, Type type, int value) {
         this.isWhite = isWhite;
@@ -38,4 +38,5 @@ public class Piece {
     public boolean isWhite() {
         return isWhite;
     }
+    
 }
