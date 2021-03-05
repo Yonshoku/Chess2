@@ -14,6 +14,11 @@ public class BoardMouseHandler extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent e) {
+        if (board.isOverlayShowed()) {
+            Game.getInstance().transformPawn(board.getOverlayPiece(e.getX(), e.getY()));
+            return;
+        } 
+
         if (!isMoveStarted) {
             pieceToMove = position.getPiece(board.getX(e.getX()), board.getY(e.getY()));
 
@@ -21,9 +26,15 @@ public class BoardMouseHandler extends MouseAdapter {
                 fromX = board.getX(e.getX());
                 fromY = board.getY(e.getY()); 
                 isMoveStarted = true;
-            } 
+                board.setActiveField(fromX, fromY);
+            } else {
+                board.setActiveField(-1, -1);
+            }
+
+            board.repaint();
 
         } else {
+
             pieceToCapture = position.getPiece(board.getX(e.getX()), board.getY(e.getY()));
 
             // Piece clicked twice
@@ -34,11 +45,17 @@ public class BoardMouseHandler extends MouseAdapter {
             if (pieceToCapture != null && pieceToMove.isWhite() == pieceToCapture.isWhite()) {
                 fromX = board.getX(e.getX());
                 fromY = board.getY(e.getY());
+
+                board.setActiveField(fromX, fromY);
+                board.repaint();
                 return;
             }
 
             toX = board.getX(e.getX());
             toY = board.getY(e.getY());
+
+            board.setActiveField(-1, -1);
+            board.repaint(); 
 
             Game.getInstance().processMove(fromX, fromY, toX, toY);    
             isMoveStarted = false;

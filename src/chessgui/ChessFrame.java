@@ -22,7 +22,6 @@ public class ChessFrame{
                 // Init game 
                 Game.getInstance();
                 Board.getInstance();
-                Board.getInstance().fillBoardContentPane();
                 Board.getInstance().addMouseListener(new BoardMouseHandler());
             }
         });

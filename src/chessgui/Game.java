@@ -2,6 +2,11 @@ package chessgui;
 
 import pieces.*;
 
+// To do
+// Checks
+// Mate
+// Draw
+
 public class Game {
     private static Game game = new Game();
 
@@ -11,6 +16,7 @@ public class Game {
 
     Piece pieceToMove;
     boolean isMoveMade = false;
+    int fromX, fromY, toX, toY;
 
     public static final Game getInstance() {
         return game;
@@ -47,8 +53,12 @@ public class Game {
                     position.addPiece(pieceToMove, toX, toY);
                     position.deletePiece(toX, fromY);
                 } else if (pawn.doesReachedLastLine(toY)) {
-                    PawnTransformOverlay.getInstance().showOverlay(pawn.isWhite());
-                    makeMove(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR)); 
+                    this.fromX = fromX;
+                    this.fromY = fromY;
+                    this.toX = toX;
+                    this.toY = toY;
+                    board.setOverlayShowed(true);
+                    board.setOverlayColor(pawn.isWhite());
                 } else {
                     makeMove(new Move(pieceToMove, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.REGULAR)); 
                 }
@@ -63,11 +73,14 @@ public class Game {
             isMoveMade = true;
         }
 
-        if (isMoveMade) {
-            position.changeTurn();
-            board.repaint();
-            isMoveMade = false;
-        }
+        if (isMoveMade) 
+            finishMove(); 
+    }
+
+    public void finishMove() { 
+        position.changeTurn();
+        board.repaint();
+        isMoveMade = false;
     }
 
     public void makeMove(Move move) {
@@ -86,13 +99,23 @@ public class Game {
             position.deletePiece(moveToUndo.getToX(), moveToUndo.getToY());
             position.addPiece(moveToUndo.getCapturedPiece(), moveToUndo.getToX(), moveToUndo.getToY());
             position.addPiece(moveToUndo.getMovedPiece(), moveToUndo.getFromX(), moveToUndo.getFromY());
+        } else if (moveToUndo.getType() == MoveType.TRANSFORMING) {
+            position.deletePiece(moveToUndo.getToX(), moveToUndo.getToY());
+            position.addPiece(moveToUndo.getCapturedPiece(), moveToUndo.getToX(), moveToUndo.getToY());
+            position.addPiece(new Pawn(moveToUndo.getMovedPiece().isWhite()), moveToUndo.getFromX(), moveToUndo.getFromY());
         }
 
         movesLog.deleteLastMove();
         movesLog.decrementMovesNum();
     }
 
-    public void transformPawn(Piece p) {
-        movesLog.add(new Move(p))
+    public void transformPawn(Piece piece) {
+        if (piece != null) {
+            makeMove(new Move(piece, fromX, fromY, position.getPiece(toX, toY), toX, toY, MoveType.TRANSFORMING));
+            finishMove();
+        }
+        
+        board.setOverlayShowed(false);
+        finishMove();
     }
 }

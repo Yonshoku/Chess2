@@ -27,6 +27,16 @@ public class Board extends JPanel {
 
     private String pathToImages = "bin" + File.separator + "images" + File.separator;
 
+    private boolean isOverlayShowed = false;
+    private boolean isWhite;
+    private int overlayWidth = boardSize;
+    private int overlayHeight = boardSize / 5;
+    private int overlayMarginY = (boardSize - overlayHeight) / 2;
+    private int overlayImageSize = Math.round(overlayHeight * 0.9f);
+    private int overlayMarginX = (overlayWidth - overlayImageSize * 4) / 2;
+
+    private int activeFieldX = -1, activeFieldY = -1;
+
     public static final Board getInstance() {
         return board;
     }
@@ -35,14 +45,14 @@ public class Board extends JPanel {
         // Initialize colors 
         colors.put("boardLight", new Color(189, 174, 160));
         colors.put("boardDark", new Color(75, 66, 56));
+        colors.put("overlayDark", new Color(0, 0, 0));
+        colors.put("overlayLight", new Color(255, 255, 255));
+        colors.put("notationLight", new Color(215, 215, 215));
+        colors.put("notationDark", new Color(10, 10, 10));
+        colors.put("activeField", new Color(156, 219, 146));
 
         // Load pieces images
         loadPiecesImages();
-    }
-
-    public void fillBoardContentPane() {
-        setLayout(new OverlayLayout(this)); 
-        add(PawnTransformOverlay.getInstance());
     }
 
     // Main painting method
@@ -50,17 +60,18 @@ public class Board extends JPanel {
         super.paintComponent(g);
         
         paintBoard(g);
+        paintNotation(g);
+        paintActiveField(g);
         paintPieces(g, Position.getInstance().getLayout());
+
+        if (isOverlayShowed) 
+            paintOverlay(g);
     }
 
     // Size of the board
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(boardSize, boardSize);
-    }
-
-    public boolean setOptimizedDrawingEnabled() {
-        return false;
     }
 
     // Paint methods
@@ -111,6 +122,87 @@ public class Board extends JPanel {
             }
         }
 
+    }
+
+    public void paintOverlay(Graphics g) {
+        if (isWhite) {
+            g.setColor(colors.get("overlayDark"));
+        } else {
+            g.setColor(colors.get("overlayLight"));
+        }
+
+        g.fillRect(0, overlayMarginY, overlayWidth, overlayHeight);
+        
+        int marginY = overlayMarginY + (overlayHeight - overlayImageSize) / 2;
+
+        if (isWhite) {
+            g.drawImage(resizeImage(whitePiecesImages.get(Type.BISHOP), overlayImageSize, overlayImageSize), overlayMarginX, marginY, null);
+            g.drawImage(resizeImage(whitePiecesImages.get(Type.KNIGHT), overlayImageSize, overlayImageSize), overlayMarginX + overlayImageSize, marginY, null);
+            g.drawImage(resizeImage(whitePiecesImages.get(Type.ROOK), overlayImageSize, overlayImageSize), overlayMarginX + overlayImageSize * 2, marginY, null);
+            g.drawImage(resizeImage(whitePiecesImages.get(Type.QUEEN), overlayImageSize, overlayImageSize), overlayMarginX + overlayImageSize * 3, marginY, null);
+        } else {
+            g.drawImage(resizeImage(blackPiecesImages.get(Type.BISHOP), overlayImageSize, overlayImageSize), overlayMarginX, marginY, null);
+            g.drawImage(resizeImage(blackPiecesImages.get(Type.KNIGHT), overlayImageSize, overlayImageSize), overlayMarginX + overlayImageSize, marginY, null);
+            g.drawImage(resizeImage(blackPiecesImages.get(Type.ROOK), overlayImageSize, overlayImageSize), overlayMarginX + overlayImageSize * 2, marginY, null);
+            g.drawImage(resizeImage(blackPiecesImages.get(Type.QUEEN), overlayImageSize, overlayImageSize), overlayMarginX + overlayImageSize * 3, marginY, null);
+        }
+    }
+
+    public Piece getOverlayPiece(int x, int y) {
+        if (y > overlayMarginY && y < overlayMarginY + overlayHeight) {
+
+            if (x > overlayMarginX && x < overlayMarginX + overlayImageSize) {
+                return new Bishop(isWhite);
+            } else if (x > overlayMarginX + overlayImageSize && x < overlayMarginX + overlayImageSize * 2) {
+                return new Knight(isWhite);
+            } else if (x > overlayMarginX + overlayImageSize * 2 && x < overlayMarginX + overlayImageSize * 3) {
+                return new Rook (isWhite);
+            } else if (x > overlayMarginX + overlayImageSize * 3 && x < overlayMarginX + overlayImageSize * 4) {
+                return new Queen(isWhite);
+            }
+                 
+        }
+
+        return null;
+    }
+
+    public void paintNotation(Graphics g) {
+        int fontSize = 16;
+        int marginX = 4;
+        int marginY = fontSize + marginX - 4;
+
+        Font font = new Font("SansSerif", Font.BOLD, fontSize);
+        g.setFont(font);
+
+        for (int i = 0; i < ROWS; i++) {
+            if ((i + 2) % 2 == 0) {
+                g.setColor(colors.get("notationDark"));
+            } else {
+                g.setColor(colors.get("notationLight"));
+            }
+
+            g.drawString(String.valueOf(i + 1), marginX, fieldSize * i + marginY);     
+        }
+        
+        marginY = (fieldSize * ROWS) - fontSize + 8;
+        marginX = fieldSize - fontSize + 4;
+
+        for (int i = 0; i < COLS; i++) {
+            if ((i + 2) % 2 == 0) {
+                g.setColor(colors.get("notationLight"));
+            } else {
+                g.setColor(colors.get("notationDark"));
+            }
+
+            g.drawString(String.valueOf((char)(97 + i)), marginX + fieldSize * i, marginY);     
+        }
+    }
+
+    public void paintActiveField(Graphics g) {
+        if (activeFieldX > 0) { 
+            g.setColor(colors.get("activeField"));
+            g.fillRect(fieldSize * activeFieldX, fieldSize * activeFieldY, fieldSize, fieldSize); 
+        }
     }
 
     public int getX(int x) {
@@ -174,16 +266,23 @@ public class Board extends JPanel {
         return COLS;
     }
 
-    public int getBoardSize() {
-        return boardSize;
+    public void setOverlayShowed(boolean isOverlayShowed) {
+        this.isOverlayShowed = isOverlayShowed;
     }
 
-    public BufferedImage getImageOfPiece(Type type, boolean isWhite) { 
-        if (isWhite) 
-            return whitePiecesImages.get(type);
-        else
-            return blackPiecesImages.get(type); 
+    public boolean isOverlayShowed() {
+        return isOverlayShowed;
     }
+
+    public void setOverlayColor(boolean isWhite) {
+        this.isWhite = isWhite;
+    }
+
+    public void setActiveField(int x, int y) {
+        this.activeFieldX = x;
+        this.activeFieldY = y;
+    }
+
 }
 
 
