@@ -33,12 +33,15 @@ public class Game {
         movesLog = movesLog.getInstance();
     } 
 
-    public void processMove(int fromX, int fromY, int toX, int toY) {
+    public static void processMove(int fromX, int fromY, int toX, int toY) {
         pieceToMove = position.getPiece(fromX, fromY);
         
         // The right side is making move
-        if(pieceToMove.isWhite() != position.isWhiteTurn())
+        if(pieceToMove.isWhite() != position.isWhiteTurn()) {
+            System.out.println("wrong side move");
             return;
+        }
+
 
         // Process pawn behaviour
         if (pieceToMove.getType() == Type.PAWN) {

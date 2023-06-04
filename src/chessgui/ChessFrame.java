@@ -1,8 +1,11 @@
 package chessgui;
 
+import local.Client;
+
 import javax.swing.*;
 import javax.swing.JFrame.*;
 import java.awt.*;
+import java.util.Random;
 
 public class ChessFrame{
     private static ChessFrame chessFrame = new ChessFrame();
@@ -23,6 +26,13 @@ public class ChessFrame{
                 Game.getInstance();
                 Board.getInstance();
                 Board.getInstance().addMouseListener(new BoardMouseHandler());
+
+                try {
+                    new Client().run();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         });
     }

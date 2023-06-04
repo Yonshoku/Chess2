@@ -3,6 +3,8 @@ package chessgui;
 import pieces.*;
 
 import java.awt.event.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BoardMouseHandler extends MouseAdapter {
     Board board = Board.getInstance();
@@ -12,8 +14,14 @@ public class BoardMouseHandler extends MouseAdapter {
     boolean isMoveStarted = false;
     int fromX, fromY, toX, toY;
 
+    private java.util.Timer timer = new Timer();
+
+    private int touches = 0;
+
     @Override
     public void mousePressed(MouseEvent e) {
+        touches += 1;
+
         if (board.isOverlayShowed()) {
             Game.getInstance().transformPawn(board.getOverlayPiece(e.getX(), e.getY()));
             return;
@@ -61,5 +69,4 @@ public class BoardMouseHandler extends MouseAdapter {
             isMoveStarted = false;
         }
     }
-
 }
